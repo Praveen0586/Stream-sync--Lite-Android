@@ -29,7 +29,10 @@ class SignUpScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       " Username",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                   TextFormField(
@@ -50,7 +53,10 @@ class SignUpScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Email",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                   TextFormField(
@@ -66,12 +72,15 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     validator: validateEmail,
                   ),
-                SizedBox(height: 18),
+                  SizedBox(height: 18),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Password",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                   TextFormField(
@@ -89,7 +98,7 @@ class SignUpScreen extends StatelessWidget {
                     validator: validatePassword,
                   ),
                   SizedBox(height: 16),
-              
+
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(
@@ -115,7 +124,7 @@ class SignUpScreen extends StatelessWidget {
                       style: TextStyle(color: Colors.white), // White text
                     ),
                   ),
-              
+
                   SizedBox(height: 16),
                   Text.rich(
                     TextSpan(

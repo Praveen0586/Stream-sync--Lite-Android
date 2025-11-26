@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:streamsync_lite/features/authentication/view/signupScreen.dart';
+import 'package:streamsync_lite/features/home/view/homescreen.dart';
 import 'package:streamsync_lite/features/splash/viewModels/splash_cubit.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SplashCubit, SplashState>(
       listener: (context, state) {
-        if (state is NavigateToNextScreen) {
+        if (state is UserAlreadyLogined) {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) =>SignUpScreen()),
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        } else if (state is NavigateToNextScreen) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => SignUpScreen()),
           );
         }
       },

@@ -19,5 +19,5 @@ final class SplashError extends SplashState {
   final String message;
   SplashError({required this.message});
 }
-
+class UserAlreadyLogined extends SplashState {}
 final class NavigateToNextScreen extends SplashState {}

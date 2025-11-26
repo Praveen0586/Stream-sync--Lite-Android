@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/features/authentication/model/userModel.dart';
 
 class Localdatabase {
@@ -23,7 +24,10 @@ class Localdatabase {
     String? userData = sharedPreferences.getString("user");
     if (userData != null) {
       Map<String, dynamic> userMap = json.decode(userData);
-      return UserModel.fromJson(userMap);
+      final UserModel _user = UserModel.fromJson(userMap);
+      currentuser = _user;
+      print("current User Saved");
+      return _user;
     } else {
       return null;
     }

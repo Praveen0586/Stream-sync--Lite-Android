@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:streamsync_lite/core/constants/constants.dart';
+import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/core/services/APIServices.dart';
 import 'package:http/http.dart' as http;
 

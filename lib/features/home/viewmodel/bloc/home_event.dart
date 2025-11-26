@@ -9,7 +9,9 @@ class VideosLoadingEvent extends HomeEvent {}
 
 class LoadSuccesEvent extends HomeEvent {}
 
-class GoToPlayScreen extends HomeEvent {
-  final String channeId;
-  GoToPlayScreen(this.channeId);
-}
+// class GoToPlayScreen extends HomeEvent {
+//   final String channeId;
+//   GoToPlayScreen(this.channeId);
+// }
+
+class RefreshEvent extends HomeEvent {}

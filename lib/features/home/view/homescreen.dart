@@ -13,19 +13,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<HomeBloc>().add(startLoadEvent());
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    context.read<HomeBloc>().add(startLoadEvent());
+    // context.read<HomeBloc>().add(startLoadEvent());
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (context, state) {
-        if (state is GoToPlayScreenState) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return Videoplayscreen(videoID: state.VideoId);
-              },
-            ),
-          );
-        }
+       
       },
       builder: (context, state) {
         if (state is loadingState) {
@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
             appBar: AppBar(title: Text("Stream Sync"), centerTitle: true),
             body: RefreshIndicator(
               onRefresh: () async {
-                context.read<HomeBloc>().add(startLoadEvent());
+                context.read<HomeBloc>().add(RefreshEvent());
               },
               child: ListView.builder(
                 physics: AlwaysScrollableScrollPhysics(),
@@ -55,8 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       print("Play: ${video.title}");
 
-                      context.read<HomeBloc>().add(
-                        GoToPlayScreen(video.videoId),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              CourseVideoScreen(videoID: video.videoId),
+                        ),
                       );
                       // Navigate to player
                     },
@@ -83,6 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         }
+        // else {
+        //   context.read<HomeBloc>().add(startLoadEvent());
+        //   return Scaffold(
+        //     appBar: AppBar(title: Text("Stream Sync"), centerTitle: true),
+        //   );
+        // }
+        else {}
         return Scaffold(
           appBar: AppBar(title: Text("Stream Sync"), centerTitle: true),
         );

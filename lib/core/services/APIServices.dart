@@ -1,4 +1,4 @@
-import 'package:streamsync_lite/core/constants/constants.dart';
+import 'package:streamsync_lite/core/globals/globals.dart';
 
 class ApiConfigs {
   static const liveurl = "";
@@ -15,6 +15,9 @@ class ApiConfigs {
   static String videosByChannelid =
       baseURL + "/videos/latest";
   static String getVideoByID = baseURL + "/videos/Xw69Rw-GY4s";
-  static String sendProgress = baseURL + "videos/progress";
+  static String sendProgress = baseURL + "/videos/progress";
+    static String getProgress = baseURL + "/videos/progress/get";
+
+
 
 }

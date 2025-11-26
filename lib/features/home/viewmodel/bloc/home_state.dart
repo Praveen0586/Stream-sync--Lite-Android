@@ -12,9 +12,9 @@ class LoadingsuccesState extends HomeState {
   LoadingsuccesState(this.videoList);
 }
 
-class GoToPlayScreenState extends HomeState {
-  final String VideoId;
-  GoToPlayScreenState(this.VideoId);
-}
+// class GoToPlayScreenState extends HomeState {
+//   final String VideoId;
+//   GoToPlayScreenState(this.VideoId);
+// }
 
 class LoadingErrorstate extends HomeState {}

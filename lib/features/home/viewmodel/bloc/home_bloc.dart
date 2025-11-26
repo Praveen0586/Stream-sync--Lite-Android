@@ -11,10 +11,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final Homerepo homerepo;
   final channelID = "UCeMpxGQm9c8Zyz_fjEAxXnQ";
   HomeBloc(this.homerepo) : super(HomeInitial()) {
-    on<HomeEvent>((event, emit) {
-      // TODO: implement event handler
-    });
-
     on<startLoadEvent>((event, emit) async {
       emit(loadingState());
       try {
@@ -24,12 +20,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(LoadingsuccesState(videso));
       } catch (e) {
         emit(LoadingErrorstate());
-        throw (e);
       }
     });
-
-    on<GoToPlayScreen>((event, emit) {
-      emit(GoToPlayScreenState(event.channeId));
+    on<RefreshEvent>((event, emit) async {
+      emit(loadingState());
+      try {
+        final List<Video> videso = await homerepo.refresh(channelID);
+        emit(LoadingsuccesState(videso));
+      } catch (e) {
+        emit(LoadingErrorstate());
+      }
     });
+    // on<GoToPlayScreen>((event, emit) {
+    //   emit(GoToPlayScreenState(event.channeId));
+    //   // emit(LoadingsuccesState());
+    // });
   }
 }

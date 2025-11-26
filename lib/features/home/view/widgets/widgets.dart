@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:streamsync_lite/core/services/cacheimages.dart';
 
 class VideoCard extends StatelessWidget {
   final String title;
@@ -36,12 +37,16 @@ class VideoCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                  child: Image.network(
-                    thumbnailUrl,
-                    height: 225,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                
+                    child: VideoThumbnail(imageUrl: thumbnailUrl),
+                  
+
+                  // Image.network(
+                  //   thumbnailUrl,
+                  //   height: 225,
+                  //   width: double.infinity,
+                  //   fit: BoxFit.cover,
+                  // ),
                 ),
                 Positioned(
                   right: 10,

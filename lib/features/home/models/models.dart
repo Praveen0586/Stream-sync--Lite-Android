@@ -28,4 +28,16 @@ class Video {
       durationSeconds: json['duration_seconds'],
     );
   }
+  Map<String, dynamic> toJson() {
+  return {
+    'video_id': videoId,
+    'title': title,
+    'description': description,
+    'thumbnail_url': thumbnailUrl,
+    'channel_id': channelId,
+    'published_at': publishedAt,
+    'duration_seconds': durationSeconds,
+  };
+}
+
 }

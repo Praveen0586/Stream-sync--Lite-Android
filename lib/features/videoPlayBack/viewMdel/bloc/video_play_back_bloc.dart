@@ -1,13 +1,40 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:streamsync_lite/features/videoPlayBack/repository/videoplayRepo.dart';
 
 part 'video_play_back_event.dart';
 part 'video_play_back_state.dart';
 
 class VideoPlayBackBloc extends Bloc<VideoPlayBackEvent, VideoPlayBackState> {
-  VideoPlayBackBloc() : super(VideoPlayBackInitial()) {
-    on<VideoPlayBackEvent>((event, emit) {
-      // TODO: implement event handler
+  final Videoplayrepo repo;
+  VideoPlayBackBloc(this.repo) : super(VideoPlayBackInitial()) {
+   
+    on<UpdatePrgressEvent>((event, emit) async {
+      try {
+        await repo.updateVideoProgress(
+          event.videoid,
+          event.userid,
+          event.prgress,
+        );
+        emit(ProgressUpdated(event.prgress));
+      } catch (e) {
+        emit(VideoProgressError("Failed to update progress"));
+      }
+    });
+
+    on<GetProgressEvent>((event, emit) async {
+      print("GetProgressEvent");
+
+      try {
+        final progress = await repo.getVideoProgress(
+          event.videoID,
+          event.userid,
+        );
+        print("video progress: $progress");
+        emit(ProgressLoadedState(progress));
+      } catch (e) {
+        emit(VideoProgressError("Failed to load progress"));
+      }
     });
   }
 }

@@ -10,6 +10,10 @@ import 'package:streamsync_lite/features/home/repositories/Homerepo.dart';
 import 'package:streamsync_lite/features/home/services/localStorage.dart';
 import 'package:streamsync_lite/features/home/services/video_api_services.dart';
 import 'package:streamsync_lite/features/home/viewmodel/bloc/home_bloc.dart';
+import 'package:streamsync_lite/features/notifications/repository/ntificationsrepo.dart';
+import 'package:streamsync_lite/features/notifications/services/localNotifications.dart';
+import 'package:streamsync_lite/features/notifications/services/notificationremote.dart';
+import 'package:streamsync_lite/features/notifications/viewModel/bloc/notifications_bloc.dart';
 import 'package:streamsync_lite/features/splash/repositories/splashrepo.dart';
 import 'package:streamsync_lite/features/splash/view/splashScreen.dart';
 import 'package:streamsync_lite/features/splash/viewModels/splash_cubit.dart';
@@ -42,6 +46,15 @@ void main() async {
     videppreviewapi,
     videoPlayLocalStorage,
   );
+  final NotificationLocalService notificationLocalService =
+      NotificationLocalService();
+  final NotificationRemoteService notificationRemoteService =
+      NotificationRemoteService();
+
+  final NotificationRepository notificationRepository = NotificationRepository(
+    remote: notificationRemoteService,
+    local: notificationLocalService,
+  );
   runApp(
     MultiBlocProvider(
       providers: [
@@ -49,6 +62,7 @@ void main() async {
         BlocProvider(create: (context) => AuthentictionBloc(authrepo)),
         BlocProvider(create: (context) => HomeBloc(homerepo)),
         BlocProvider(create: (context) => VideoPlayBackBloc(videoplayrepo)),
+        BlocProvider(create: (context) => NotificationsBloc(notificationRepository)),
       ],
       child: const MyApp(),
     ),

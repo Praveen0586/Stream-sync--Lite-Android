@@ -16,8 +16,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try {
         final List<Video> videso = await homerepo.FetchVideoByChannelId(
           channelID,
-        );
-        emit(LoadingsuccesState(videso));
+        ); final count = await homerepo.fetchNotifications_count();
+        emit(LoadingsuccesState(videso,count));
       } catch (e) {
         emit(LoadingErrorstate());
       }
@@ -26,14 +26,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(loadingState());
       try {
         final List<Video> videso = await homerepo.refresh(channelID);
-        emit(LoadingsuccesState(videso));
+        final count = await homerepo.fetchNotifications_count();
+        emit(LoadingsuccesState(videso,count));
       } catch (e) {
         emit(LoadingErrorstate());
       }
     });
-    // on<GoToPlayScreen>((event, emit) {
-    //   emit(GoToPlayScreenState(event.channeId));
-    //   // emit(LoadingsuccesState());
-    // });
+
   }
 }

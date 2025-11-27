@@ -16,3 +16,7 @@ class GetProgressEvent extends VideoPlayBackEvent {
 
   GetProgressEvent(this.videoID, this.userid);
 }
+class GetVideoByIdEvent extends VideoPlayBackEvent {
+  final String videoId;
+  GetVideoByIdEvent(this.videoId);
+}

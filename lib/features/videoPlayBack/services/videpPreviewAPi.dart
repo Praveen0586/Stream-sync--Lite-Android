@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:streamsync_lite/core/services/APIServices.dart';
+import 'package:streamsync_lite/features/home/models/models.dart';
 
 class Videppreviewapi {
   Future<void> updateProgress({
@@ -21,9 +22,25 @@ class Videppreviewapi {
       }),
     );
 
-   if (response.statusCode != 200 && response.statusCode != 201) {
-  throw Exception("Failed to update progress");
-}
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception("Failed to update progress");
+    }
+  }
+
+  Future<Video> getVideoByID(String videoID) async {
+    try {
+      final _url = Uri.parse("${ApiConfigs.getVideoByID}$videoID");
+      final response = await http.get(_url);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("I gt the video");
+        final data = json.decode(response.body);
+        final _video = Video.fromJson(data["video"]);
+        return _video;
+      }
+      throw ("API error: ${response.statusCode}");
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<int> getProgress(String videoId, String userId) async {
@@ -45,5 +62,4 @@ class Videppreviewapi {
       throw (e);
     }
   }
-
 }

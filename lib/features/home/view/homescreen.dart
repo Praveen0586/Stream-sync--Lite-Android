@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:streamsync_lite/features/home/view/widgets/widgets.dart';
 import 'package:streamsync_lite/features/home/viewmodel/bloc/home_bloc.dart';
+import 'package:streamsync_lite/features/notifications/views/noificationscreen.dart';
 import 'package:streamsync_lite/features/videoPlayBack/views/videoPlayScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,13 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  int notificationCount = 0;
+
   @override
   Widget build(BuildContext context) {
-    // context.read<HomeBloc>().add(startLoadEvent());
     return BlocConsumer<HomeBloc, HomeState>(
-      listener: (context, state) {
-       
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         if (state is loadingState) {
           return Scaffold(
@@ -34,8 +35,54 @@ class _HomeScreenState extends State<HomeScreen> {
             body: Center(child: CircularProgressIndicator.adaptive()),
           );
         } else if (state is LoadingsuccesState) {
+          notificationCount = state.notificationCount;
           return Scaffold(
-            appBar: AppBar(title: Text("Stream Sync"), centerTitle: true),
+            appBar: AppBar(
+              title: Text("Stream Sync"),
+              centerTitle: true,
+              actions: [
+                Stack(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.notifications_none_outlined),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (_) => NotificationsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    if (notificationCount > 0)
+                      Positioned(
+                        right: 6,
+                        top: 1,
+                        child: Container(
+                          padding: EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: 18,
+                            minHeight: 18,
+                          ),
+                          child: Text(
+                            '$notificationCount',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
             body: RefreshIndicator(
               onRefresh: () async {
                 context.read<HomeBloc>().add(RefreshEvent());
@@ -57,10 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              CourseVideoScreen(videoID: video.videoId),
-                        ),
+                      CupertinoPageRoute(
+                            builder: (_) => CourseVideoScreen(videoID: video.videoId),
+                          ),
                       );
                       // Navigate to player
                     },
@@ -74,7 +120,21 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         } else if (state is LoadingErrorstate) {
           return Scaffold(
-            appBar: AppBar(title: Text("Stream Sync"), centerTitle: true),
+            appBar: AppBar(
+              title: Text("Stream Sync"),
+              centerTitle: true,
+              actions: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (_) => NotificationsScreen()),
+                    );
+                  },
+                  child: Icon(Icons.notifications_none_outlined),
+                ),
+              ],
+            ),
             body: Center(
               child: Container(
                 child: TextButton(

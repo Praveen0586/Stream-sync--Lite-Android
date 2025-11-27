@@ -21,3 +21,15 @@ class ProgressLoadedState extends VideoPlayBackState {
   final int progress;
   ProgressLoadedState(this.progress);
 }
+
+class VideoLoadedState extends VideoPlayBackState {
+  final Video video;
+  VideoLoadedState(this.video);
+}
+
+class VideoLoadingState extends VideoPlayBackState {}
+
+class VideoErrorState extends VideoPlayBackState {
+  final String message;
+  VideoErrorState(this.message);
+}

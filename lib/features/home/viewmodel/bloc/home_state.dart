@@ -8,13 +8,13 @@ final class HomeInitial extends HomeState {}
 class loadingState extends HomeState {}
 
 class LoadingsuccesState extends HomeState {
-  final List<Video> videoList;
-  LoadingsuccesState(this.videoList);
+  final List<Video> videoList;  final int notificationCount;
+
+  LoadingsuccesState(this.videoList, this.notificationCount);
+  
 }
 
-// class GoToPlayScreenState extends HomeState {
-//   final String VideoId;
-//   GoToPlayScreenState(this.VideoId);
-// }
+
 
 class LoadingErrorstate extends HomeState {}
+

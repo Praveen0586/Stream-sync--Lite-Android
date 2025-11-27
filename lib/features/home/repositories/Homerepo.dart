@@ -41,4 +41,10 @@ class Homerepo {
 
     return videosList;
   }
+
+    Future<int> fetchNotifications_count() async {
+      int count = await api.getNotificationCount();
+      print('User has $count notifications');
+      return count;
+    }
 }

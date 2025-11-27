@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:streamsync_lite/features/home/view/homescreen.dart';
 import 'package:streamsync_lite/features/notifications/viewModel/bloc/notifications_bloc.dart';
 import 'package:streamsync_lite/features/videoPlayBack/views/videoPlayScreen.dart';
 
@@ -27,7 +26,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<NotificationsBloc>().add(LoadNotificationsEvent());
   }
@@ -51,89 +49,100 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
       ),
 
-      body: BlocBuilder<NotificationsBloc, NotificationsState>(
-        builder: (context, state) {
-          if (state is NotificationLoading) {
-            return const Center(child: CircularProgressIndicator());
+      body: BlocListener<NotificationsBloc, NotificationsState>(
+        listener: (context, state) {
+       
+          if (state is NotificationDeletedState) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Notification deleted")));
           }
 
-          if (state is NotificationLoaded) {
-            return ListView.separated(
-              itemCount: state.notifications.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (context, index) {
-                final n = state.notifications[index];
+       
+          if (state is NotificationDeleteErrorState) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
 
-                return InkWell(
-                  onTap: () {
-                    // Mark the notification as read
-                    context.read<NotificationsBloc>().add(
-                      MarkNotificationReadEvent(n.id),
-                    );
+        child: BlocBuilder<NotificationsBloc, NotificationsState>(
+          builder: (context, state) {
+            if (state is NotificationLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-                    // Navigate to video if metadata has videoId
-                    if (n.videoId != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              CourseVideoScreen(videoID: n.videoId!),
+            if (state is NotificationLoaded) {
+              if (state.notifications.isEmpty) {
+                return const Center(child: Text("No Notifications"));
+              }
+
+              return ListView.separated(
+                itemCount: state.notifications.length,
+                separatorBuilder: (_, __) => Divider(),
+                itemBuilder: (context, index) {
+                  final n = state.notifications[index];
+
+                  return Dismissible(
+                    key: ValueKey("notif_${n.id}_${index}"),
+                    direction: DismissDirection.endToStart,
+
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+
+                    
+                    onDismissed: (_) {
+                   
+                      final bloc = context.read<NotificationsBloc>();
+                    state.notifications.removeAt(index);
+
+                   
+                      bloc.add(
+                        DeleteNotificationEvent(
+                          notificationId: int.parse(n.id),
                         ),
                       );
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _iconSelector(n.iconType),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                n.title,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                n.description,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: Colors.grey.shade600),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                formatTimeAgo(n.receivedAt),
-                                style: TextStyle(
-                                  color: Colors.grey.shade500,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        if (!n.isRead)
-                          const Icon(
-                            Icons.circle,
-                            color: Colors.blue,
-                            size: 10,
-                          ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          }
+                    },
 
-          return const Center(child: Text("No Notifications"));
-        },
+                    child: ListTile(
+                      leading: _iconSelector(n.iconType),
+                      title: Text(n.title),
+                      subtitle: Text(n.description),
+                      trailing: n.isRead
+                          ? null
+                          : Icon(Icons.circle, color: Colors.blue, size: 10),
+
+                   
+                      onTap: () {
+                        if (!n.isRead) {
+                          context.read<NotificationsBloc>().add(
+                            MarkReadEvent(n.id),
+                          );
+                        }
+
+                        if (n.videoId != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  CourseVideoScreen(videoID: n.videoId!),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  );
+                },
+              );
+            }
+
+            return const Center(child: Text("No Notifications"));
+          },
+        ),
       ),
     );
   }

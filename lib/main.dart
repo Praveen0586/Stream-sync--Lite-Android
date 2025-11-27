@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:streamsync_lite/core/fcm/firebasemessaging.dart';
+import 'package:streamsync_lite/core/fcm/notificationservice.dart';
 import 'package:streamsync_lite/features/authentication/repositories/authrepositry.dart';
 import 'package:streamsync_lite/features/authentication/services/api_services.dart';
 import 'package:streamsync_lite/features/authentication/services/localdatabase.dart';
@@ -22,12 +24,17 @@ import 'package:streamsync_lite/features/videoPlayBack/services/videpPreviewAPi.
 import 'package:streamsync_lite/features/videoPlayBack/services/vidoelocalStorage.dart';
 import 'package:streamsync_lite/features/videoPlayBack/viewMdel/bloc/video_play_back_bloc.dart';
 import 'firebase_options.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+ FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+await NotificationService.initialize();
 
+
+  
   // await InitDependencies();
 
   final prefs = await SharedPreferences.getInstance();

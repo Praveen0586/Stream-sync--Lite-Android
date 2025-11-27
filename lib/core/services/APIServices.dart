@@ -21,4 +21,6 @@ class ApiConfigs {
   static String GetNotificationCount = "$baseURL/notifications/count";
   static String deleteANotification = "$baseURL/notifications/";
   static String markAsRead = "$baseURL/notifications/mark-read";
+
+  static String sendFCMtoken ="$baseURL/users/";
 }

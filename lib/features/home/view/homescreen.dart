@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:streamsync_lite/core/fcm/notificationservice.dart';
 import 'package:streamsync_lite/features/home/view/widgets/widgets.dart';
 import 'package:streamsync_lite/features/home/viewmodel/bloc/home_bloc.dart';
 import 'package:streamsync_lite/features/notifications/views/noificationscreen.dart';
@@ -83,6 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
+            floatingActionButton: ElevatedButton(
+              onPressed: () async {
+                await NotificationService.initialize();
+                print("Notification initialized again");
+              },
+              child: Text("Re-init Notifications"),
+            ),
             body: RefreshIndicator(
               onRefresh: () async {
                 context.read<HomeBloc>().add(RefreshEvent());
@@ -104,9 +112,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       Navigator.push(
                         context,
-                      CupertinoPageRoute(
-                            builder: (_) => CourseVideoScreen(videoID: video.videoId),
-                          ),
+                        CupertinoPageRoute(
+                          builder: (_) =>
+                              CourseVideoScreen(videoID: video.videoId),
+                        ),
                       );
                       // Navigate to player
                     },

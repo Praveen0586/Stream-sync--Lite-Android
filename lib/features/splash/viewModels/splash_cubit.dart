@@ -1,5 +1,9 @@
+import 'dart:ffi';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:streamsync_lite/core/fcm/notificationservice.dart';
+import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/features/splash/repositories/splashrepo.dart';
 
 part 'splash_state.dart';
@@ -27,6 +31,10 @@ class SplashCubit extends Cubit<SplashState> {
       emit(SplashLoading(0.8));
       if (await splashrepo.isUserLoggedIn()) {
         emit(UserAlreadyLogined());
+        final token = await NotificationService.getToken();
+        print("FCM Token: $token");
+
+        await sendTokenToBackend(int.parse(currentuser!.id.toString()), token);
       } else {
         emit(SplashLoading(0.9));
 

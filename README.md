@@ -19,7 +19,7 @@ Before running the Flutter application, make sure to update the **base API URL**
 
 ```dart
 class ApiConfig {
-  static const String baseUrl = "https://your-backend-domain.com/api"; // <-- Update this
+  static const String baseUrl = "https://your-backend-domain.com"; // <-- Update this
 }
 ```
 

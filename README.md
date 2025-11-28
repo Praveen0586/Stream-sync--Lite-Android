@@ -9,6 +9,18 @@ This is the Flutter front-end for the StreamSync Lite application. This guide ex
 ```bash
 git clone https://github.com/Praveen0586/Stream-sync--Lite-Android.git
 cd streamsync_lite
+
+## 🔗 Update API Base URL
+
+Before running the Flutter application, make sure to update the **base API URL** in your project to point to your backend server.
+
+- Default API URLs may point to local servers (`http://localhost:3000`) or demo endpoints.
+- Update it to your deployed backend endpoint, for example:
+
+```dart
+class ApiConfig {
+  static const String baseUrl = "https://your-backend-domain.com/api"; // <-- Update this
+}
 ```
 
 **Note:** Make sure the backend server is running. You can visit the backend repository here: [Backend Repo Link](https://github.com/Praveen0586/Stream-sync-Lite---Server/tree/main)

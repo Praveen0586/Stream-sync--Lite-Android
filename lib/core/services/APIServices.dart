@@ -3,7 +3,7 @@ import 'package:streamsync_lite/core/globals/globals.dart';
 class ApiConfigs {
   static const liveurl = "";
 
-  static const testurl = "http://10.185.61.246:3000";
+  static const testurl = "http://10.149.200.246:3000";
 
   static String baseURL = isLiveAPI ? liveurl : testurl;
 
@@ -21,6 +21,13 @@ class ApiConfigs {
   static String GetNotificationCount = "$baseURL/notifications/count";
   static String deleteANotification = "$baseURL/notifications/";
   static String markAsRead = "$baseURL/notifications/mark-read";
+  static String adminPush = "$baseURL/notifications";
+  static String selftest = "$baseURL/notifications/send-test";
 
-  static String sendFCMtoken ="$baseURL/users/";
+  static String sendFCMtoken = "$baseURL/users/";
+
+  static String addfavorites = "$baseURL/favorites/add";
+  static String removeFavorites = "$baseURL/favorites/remove";
+  static String getallfaoritesIDs = "$baseURL/favorites/";
+  static String getvideosbybatch = "$baseURL/favorites/batch";
 }

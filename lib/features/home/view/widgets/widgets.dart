@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/core/services/cacheimages.dart';
+import 'package:streamsync_lite/features/favorites/viewModel/bloc/favorites_bloc.dart';
 
 class VideoCard extends StatelessWidget {
   final String title;
@@ -37,9 +40,8 @@ class VideoCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                
-                    child: VideoThumbnail(imageUrl: thumbnailUrl),
-                  
+
+                  child: VideoThumbnail(imageUrl: thumbnailUrl),
 
                   // Image.network(
                   //   thumbnailUrl,
@@ -119,7 +121,14 @@ void showVideoActions(BuildContext context, String videoID) {
             ListTile(
               leading: Icon(Icons.favorite_border),
               title: Text("Add to Favorites"),
-              onTap: () {},
+              onTap: () {
+                context.read<FavoritesBloc>().add(
+                  AddFavoriteEvent(
+                    userId: currentuser!.id,
+                    videoId: videoID,
+                  ),
+                );Navigator.pop(context);
+              },
             ),
             ListTile(
               leading: Icon(Icons.info_outline),

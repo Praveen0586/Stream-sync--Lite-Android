@@ -7,7 +7,6 @@ import 'package:streamsync_lite/features/notifications/models/models.dart';
 class NotificationRemoteService {
   NotificationRemoteService();
   Future<List<NotificationModel>> fetchNotifications() async {
-    print("hey i am getting noti");
     if (currentuser == null) {
       throw Exception("User not logged in");
     }

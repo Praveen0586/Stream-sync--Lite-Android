@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:streamsync_lite/core/fcm/notificationservice.dart';
+import 'package:streamsync_lite/features/favorites/view/favorites.dart';
 import 'package:streamsync_lite/features/home/view/widgets/widgets.dart';
 import 'package:streamsync_lite/features/home/viewmodel/bloc/home_bloc.dart';
 import 'package:streamsync_lite/features/notifications/views/noificationscreen.dart';
+import 'package:streamsync_lite/features/profile/view/profilescreen.dart';
 import 'package:streamsync_lite/features/videoPlayBack/views/videoPlayScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -42,6 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text("Stream Sync"),
               centerTitle: true,
               actions: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (_) => FavoritesScreen()),
+                    );
+                  },
+                  child: Icon(Icons.favorite_outline),
+                ),
                 Stack(
                   children: [
                     IconButton(
@@ -82,15 +92,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                   ],
                 ),
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 2, right: 9),
+                    child: Icon(Icons.person_3_outlined),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (_) => AdminFCMPage()),
+                    );
+                  },
+                ),
               ],
             ),
-            floatingActionButton: ElevatedButton(
-              onPressed: () async {
-                await NotificationService.initialize();
-                print("Notification initialized again");
-              },
-              child: Text("Re-init Notifications"),
-            ),
+
             body: RefreshIndicator(
               onRefresh: () async {
                 context.read<HomeBloc>().add(RefreshEvent());
@@ -133,6 +149,15 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text("Stream Sync"),
               centerTitle: true,
               actions: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (_) => FavoritesScreen()),
+                    );
+                  },
+                  child: Icon(Icons.favorite_outline),
+                ),
                 InkWell(
                   onTap: () {
                     Navigator.push(

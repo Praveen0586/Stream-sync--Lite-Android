@@ -34,7 +34,7 @@ class SplashCubit extends Cubit<SplashState> {
         final token = await NotificationService.getToken();
         print("FCM Token: $token");
 
-        await sendTokenToBackend(int.parse(currentuser!.id.toString()), token);
+        await sendTokenToBackend(currentuser!.id, token);
       } else {
         emit(SplashLoading(0.9));
 

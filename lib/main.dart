@@ -8,6 +8,10 @@ import 'package:streamsync_lite/features/authentication/repositories/authreposit
 import 'package:streamsync_lite/features/authentication/services/api_services.dart';
 import 'package:streamsync_lite/features/authentication/services/localdatabase.dart';
 import 'package:streamsync_lite/features/authentication/viewmodel/bloc/authentiction_bloc.dart';
+import 'package:streamsync_lite/features/favorites/repository/favrepo.dart';
+import 'package:streamsync_lite/features/favorites/services/apicalls_favorites.dart';
+import 'package:streamsync_lite/features/favorites/services/loca;storage.dart';
+import 'package:streamsync_lite/features/favorites/viewModel/bloc/favorites_bloc.dart';
 import 'package:streamsync_lite/features/home/repositories/Homerepo.dart';
 import 'package:streamsync_lite/features/home/services/localStorage.dart';
 import 'package:streamsync_lite/features/home/services/video_api_services.dart';
@@ -62,6 +66,9 @@ await NotificationService.initialize();
     remote: notificationRemoteService,
     local: notificationLocalService,
   );
+  final FavoritesLocalService favoritesLocalService= FavoritesLocalService();
+  final FavoritesRemoteService  favoritesRemoteService  = FavoritesRemoteService  ();
+  final FavoritesRepository favoritesRepository= FavoritesRepository(local: favoritesLocalService, remote: favoritesRemoteService);
   runApp(
     MultiBlocProvider(
       providers: [
@@ -70,6 +77,7 @@ await NotificationService.initialize();
         BlocProvider(create: (context) => HomeBloc(homerepo)),
         BlocProvider(create: (context) => VideoPlayBackBloc(videoplayrepo)),
         BlocProvider(create: (context) => NotificationsBloc(notificationRepository)),
+        BlocProvider(create: (Context)=>FavoritesBloc(favoritesRepository))
       ],
       child: const MyApp(),
     ),

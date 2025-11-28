@@ -14,7 +14,10 @@ class VideoApiServices {
         _url,
         headers: {"Content-Type": "application/json"},
       );
-
+// final result = await Connectivity().checkConnectivity();
+// if (result == ConnectivityResult.none) {
+//   return {"success": false, "message": "No internet"};
+// }
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
         return data;

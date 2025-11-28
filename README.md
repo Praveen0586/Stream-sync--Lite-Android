@@ -7,7 +7,7 @@ This is the Flutter front-end for the StreamSync Lite application. This guide ex
 ## 🔗 Clone the Repository
 
 ```bash
-git clone <YOUR_FLUTTER_REPO_URL>
+git clone https://github.com/Praveen0586/Stream-sync--Lite-Android.git
 cd streamsync_lite
 ```
 
@@ -48,7 +48,7 @@ flutter run
 
 ```
 streamsync_lite/
- |   firebase_options.dart
+|   firebase_options.dart
 |   main.dart
 |   
 +---core

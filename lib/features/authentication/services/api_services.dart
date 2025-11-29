@@ -14,8 +14,8 @@ class ApiServices {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      var data = json.decode(response.body);
-      print(data);
+      // var data = json.decode(response.body);
+      // print(data);
       return;
     } else {
       print("Status Code error ");
@@ -36,7 +36,7 @@ class ApiServices {
       print("status code 1 ");
       Map<String, dynamic> data = json.decode(response.body);
       print(data);
-      refreshapitocken = data['refreshToken'];
+      refreshapitocken = data['RefreshToken'];
       apitoken = data['token'];
 
       print("data returened ");

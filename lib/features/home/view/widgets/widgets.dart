@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/core/services/cacheimages.dart';
 import 'package:streamsync_lite/features/favorites/viewModel/bloc/favorites_bloc.dart';
@@ -123,11 +124,9 @@ void showVideoActions(BuildContext context, String videoID) {
               title: Text("Add to Favorites"),
               onTap: () {
                 context.read<FavoritesBloc>().add(
-                  AddFavoriteEvent(
-                    userId: currentuser!.id,
-                    videoId: videoID,
-                  ),
-                );Navigator.pop(context);
+                  AddFavoriteEvent(userId: currentuser!.id, videoId: videoID),
+                );
+                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -138,7 +137,9 @@ void showVideoActions(BuildContext context, String videoID) {
             ListTile(
               leading: Icon(Icons.share),
               title: Text("Share Video"),
-              onTap: () {},
+              onTap: () {
+                Share.share("Watch: https://youtu.be/${videoID}");
+              },
             ),
           ],
         ),

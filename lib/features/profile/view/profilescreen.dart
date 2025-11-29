@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:streamsync_lite/core/di/dependencyinjection.dart';
 import 'package:streamsync_lite/core/globals/globals.dart';
+import 'package:streamsync_lite/core/utils/themeprovider.dart';
+import 'package:streamsync_lite/features/authentication/view/signInscreen.dart';
 import 'package:streamsync_lite/features/profile/services/apiProfileServices.dart';
 
 class AdminFCMPage extends StatefulWidget {
@@ -65,10 +69,20 @@ class _AdminFCMPageState extends State<AdminFCMPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(color: Colors.black),
-        title: const Text("Admin FCM", style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+        leading: const BackButton(),
+        title: const Text("Admin FCM", style: TextStyle()),
+        // backgroundColor: Colors.white,
         elevation: 1,
+        actions: [
+          ThemeToggleButton(),
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.red),
+            tooltip: "Logout",
+            onPressed: () async {
+              await _logout(context);
+            },
+          ),
+        ],
       ),
 
       body: ListView(
@@ -228,5 +242,18 @@ class _AdminFCMPageState extends State<AdminFCMPage> {
         context,
       ).showSnackBar(SnackBar(content: Text(res["error"] ?? "Failed")));
     }
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    // Clear in-memory user object
+    currentuser= null;
+
+    final sharedPreferences = getIt<SharedPreferences>();
+    await sharedPreferences.remove("user"); 
+
+    Navigator.of(context).pushAndRemoveUntil(
+      CupertinoPageRoute(builder: (context) => SignInScreen()),
+      (Route<dynamic> route) => false,
+    );
   }
 }

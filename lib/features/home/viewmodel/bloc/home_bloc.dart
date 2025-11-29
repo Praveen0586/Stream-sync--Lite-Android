@@ -25,8 +25,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<RefreshEvent>((event, emit) async {
       emit(loadingState());
       try {
-        final List<Video> videso = await homerepo.refresh(channelID);
-        final count = await homerepo.fetchNotifications_count();
+  final List<Video> videso = await homerepo.FetchVideoByChannelId(
+          channelID,
+        );        final count = await homerepo.fetchNotifications_count();
         emit(LoadingsuccesState(videso,count));
       } catch (e) {
         emit(LoadingErrorstate());

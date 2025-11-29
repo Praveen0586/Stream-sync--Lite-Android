@@ -27,7 +27,7 @@ class NotificationService {
 
     // 🔹 Notification Channel (important)
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'default_channel', // must match with AndroidNotificationDetails
+      'default_channel',
       'General Notifications',
       description: 'Default channel for app notifications',
       importance: Importance.high,

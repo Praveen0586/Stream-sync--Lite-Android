@@ -18,10 +18,18 @@ class SignUpScreen extends StatelessWidget {
             context,
           ).showSnackBar(SnackBar(content: Text(state.error)));
         } else if (state is AuthenticationSucces) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Authentication Successful!"),
+              backgroundColor: Colors.green, // optional: green for success
+              duration: Duration(seconds: 2),
+            ),
+          );
+
           // Navigate to home screen or another screen upon successful signup
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
+            MaterialPageRoute(builder: (context) => SignInScreen()),
           );
         }
       },
@@ -114,7 +122,7 @@ class SignUpScreen extends StatelessWidget {
                       TextFormField(
                         controller: _passwordController,
                         decoration: InputDecoration(
-                          hintText: 'Enter i=Your Password',
+                          hintText: 'Enter Your Password',
                           prefixIcon: Icon(Icons.lock_outline),
                           filled: true,
                           fillColor: Colors.grey.shade100,

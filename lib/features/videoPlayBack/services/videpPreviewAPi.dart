@@ -14,15 +14,20 @@ class Videppreviewapi {
 
     final response = await http.post(
       url,
-      headers: {"Content-Type": "application/json"},
+      headers: ApiConfigs.protectedHeader(),
       body: jsonEncode({
         "videoId": videoId,
         "userId": userId,
         "progress": progress,
       }),
     );
-
-    if (response.statusCode != 200 && response.statusCode != 201) {
+    if (response.statusCode == 400 || response.statusCode == 401) {
+      return updateProgress(
+        progress: progress,
+        userId: userId,
+        videoId: videoId,
+      );
+    } else if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception("Failed to update progress");
     }
   }
@@ -30,8 +35,13 @@ class Videppreviewapi {
   Future<Video> getVideoByID(String videoID) async {
     try {
       final _url = Uri.parse("${ApiConfigs.getVideoByID}$videoID");
-      final response = await http.get(_url);
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      final response = await http.get(
+        _url,
+        headers: ApiConfigs.protectedHeader(),
+      );
+      if (response.statusCode == 400 || response.statusCode == 401) {
+        return getVideoByID(videoID);
+      } else if (response.statusCode == 200 || response.statusCode == 201) {
         print("I gt the video");
         final data = json.decode(response.body);
         final _video = Video.fromJson(data["video"]);
@@ -49,10 +59,12 @@ class Videppreviewapi {
 
       final response = await http.post(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: ApiConfigs.protectedHeader(),
         body: jsonEncode({"videoID": videoId, "userID": userId}),
       );
-
+if (response.statusCode == 400 || response.statusCode == 401) {
+        return getProgress(videoId,userId);
+      } else
       if (response.statusCode != 200)
         throw Exception("Failed to load progress");
 

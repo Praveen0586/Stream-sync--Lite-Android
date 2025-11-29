@@ -21,7 +21,7 @@ class AuthentictionBloc extends Bloc<AuthentictionEvent, AuthentictionState> {
           event.password,
         );
         emit(AuthenticationSucces());
-      } catch (e) {
+      } catch (e) {print("bloc login error");
         emit(AuthenticationFailure(error: e.toString()));
       }
     });

@@ -1,3 +1,4 @@
+import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/features/authentication/model/userModel.dart';
 import 'package:streamsync_lite/features/authentication/services/api_services.dart';
 import 'package:streamsync_lite/features/authentication/services/localdatabase.dart';
@@ -24,9 +25,9 @@ class Authrepositry {
       token: data['token'],
       id: data["user"]['id'],
     );
-
+    currentuser = user;
     await localdatabase.storeUser(user);
     localdatabase.saveTokens(data['token'], data['refreshToken']);
-    // localdatabase.storeUser(ressponse);
+    print("Both Tockens were save in securestorage ");
   }
 }

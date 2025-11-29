@@ -33,13 +33,22 @@ class Localdatabase {
     }
   }
 
+  Future<void> newAccesToken(String newrefreshtocken) async {
+    final sharedPreferences = await _prefs;
+
+    await sharedPreferences.setString(
+      "apitoken",
+      newrefreshtocken.toString(),
+    );
+  }
+
   Future<void> cleanTokens() async {
     final sharedPreferences = await _prefs;
     sharedPreferences.remove("apitoken");
     sharedPreferences.remove("refreshtoken");
   }
 
-  Future<String> getAPItoken() async {
+   Future<String> getAPItoken() async {
     final sharedPreferences = await _prefs;
     return sharedPreferences.getString("apitoken") ?? "";
   }

@@ -4,7 +4,6 @@ import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/features/favorites/model/favModel.dart';
 import 'package:streamsync_lite/features/favorites/viewModel/bloc/favorites_bloc.dart';
 import 'package:streamsync_lite/features/favorites/viewModel/bloc/favorites_state.dart';
-
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
 
@@ -14,67 +13,73 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   List<FavVideoModel>? videosList;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<FavoritesBloc>().add(LoadFavorites(currentuser!.id));
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // get current theme
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text("Favorites", style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: BackButton(color: Colors.black),
+        title: Text("Favorites", style: theme.textTheme.titleLarge),
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        elevation: theme.appBarTheme.elevation,
+        leading: BackButton(color: theme.appBarTheme.foregroundColor),
       ),
       body: BlocBuilder<FavoritesBloc, FavoritesState>(
         builder: (context, state) {
           if (state is FavoritesLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(color: theme.primaryColor));
           }
 
           if (state is FavoritesEmpty) {
-            return Center(child: Text("No favorites yet"));
+            return Center(
+              child: Text("No favorites yet", style: theme.textTheme.bodyMedium),
+            );
           }
 
           if (state is FavoritesLoaded) {
             videosList = state.videos;
             return ListView.builder(
               itemCount: state.videos.length,
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               itemBuilder: (context, index) {
                 final video = state.videos[index];
-                return _buildCard(context, video, index);
+                return _buildCard(context, video, index, theme);
               },
             );
           }
 
           if (state is FavoritesError) {
-            return Center(child: Text(state.message));
+            return Center(child: Text(state.message, style: theme.textTheme.bodyMedium));
           }
 
-          return SizedBox();
+          return const SizedBox();
         },
       ),
     );
   }
 
-  Widget _buildCard(BuildContext context, FavVideoModel video, int indes) {
+  Widget _buildCard(BuildContext context, FavVideoModel video, int index, ThemeData theme) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
-      margin: EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.07),
+            color: theme.brightness == Brightness.light
+                ? Colors.black.withOpacity(0.07)
+                : Colors.black.withOpacity(0.3),
             blurRadius: 12,
-            offset: Offset(0, 5),
+            offset: const Offset(0, 5),
           ),
         ],
       ),
@@ -89,9 +94,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               fit: BoxFit.cover,
             ),
           ),
-
-          SizedBox(width: 12),
-
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,27 +103,25 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   video.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   "Tamil Softwares",
-                  style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                  style: theme.textTheme.bodySmall,
                 ),
               ],
             ),
           ),
-
           IconButton(
-            icon: Icon(Icons.favorite, color: Colors.redAccent),
+            icon: const Icon(Icons.favorite, color: Colors.redAccent),
             onPressed: () {
               final userId = currentuser?.id;
-              if (userId == null) return; // handle null safely
-              print("Removal started");
-              videosList!.removeAt(indes);
+              if (userId == null) return;
+              videosList!.removeAt(index);
               context.read<FavoritesBloc>().add(
-                RemoveFavoriteEvent(userId: userId, videoId: video.videoId),
-              );
+                    RemoveFavoriteEvent(userId: userId, videoId: video.videoId),
+                  );
             },
           ),
         ],

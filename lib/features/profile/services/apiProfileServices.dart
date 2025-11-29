@@ -14,7 +14,7 @@ class ProfileAPi {
 
     final response = await http.post(
       url,
-      headers: {"Content-Type": "application/json"},
+      headers: ApiConfigs.protectedHeader(),
       body: jsonEncode({
         "userId": userId,
         "title": title,
@@ -26,8 +26,17 @@ class ProfileAPi {
         },
       }),
     );
-
-    return jsonDecode(response.body);
+    if (response.statusCode == 400 || response.statusCode == 401) {
+      return sendAdminPush(
+        userId: userId,
+        body: body,
+        title: title,
+        videoId: videoId,
+      );
+    } else if (response.statusCode == 200 || response.statusCode == 201)
+      return jsonDecode(response.body);
+    else
+      throw ("Admin Push Failed");
   }
 
   Future<Map<String, dynamic>> sendSelfTestFCM({
@@ -39,10 +48,13 @@ class ProfileAPi {
 
     final response = await http.post(
       url,
-      headers: {"Content-Type": "application/json"},
+      headers: ApiConfigs.protectedHeader(),
       body: jsonEncode({"userId": userId, "title": title, "body": body}),
     );
-
-    return jsonDecode(response.body);
+    if (response.statusCode == 400 || response.statusCode == 401) {
+      return sendSelfTestFCM(body: body, title: title, userId: userId);
+    } else if (response.statusCode == 200||response.statusCode == 201)
+      return jsonDecode(response.body);
+      else throw ("Self push Failed");
   }
 }

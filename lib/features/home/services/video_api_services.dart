@@ -12,12 +12,16 @@ class VideoApiServices {
       );
       final response = await http.get(
         _url,
-        headers: {"Content-Type": "application/json"},
+        headers: ApiConfigs.protectedHeader(),
       );
-// final result = await Connectivity().checkConnectivity();
-// if (result == ConnectivityResult.none) {
-//   return {"success": false, "message": "No internet"};
-// }
+      // final result = await Connectivity().checkConnectivity();
+      // if (result == ConnectivityResult.none) {
+      //   return {"success": false, "message": "No internet"};
+      // }
+
+      if (response.statusCode == 400 || response.statusCode == 401) {
+        return getVidesByChannelID(channelID);
+      } else
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
         return data;
@@ -33,9 +37,14 @@ class VideoApiServices {
         ApiConfigs.GetNotificationCount,
       ).replace(queryParameters: {'userId': currentuser?.id.toString()});
 
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: ApiConfigs.protectedHeader(),
+      );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 400 || response.statusCode == 401) {
+        return getNotificationCount();
+      } else if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['success'] == true) {
           return data['count'] ?? 0;

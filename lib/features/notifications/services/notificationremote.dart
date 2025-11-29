@@ -20,8 +20,10 @@ class NotificationRemoteService {
         },
       );
 
-      final res = await http.get(uri);
-      if (res.statusCode == 200) {
+      final res = await http.get(uri, headers: ApiConfigs.protectedHeader());
+      if (res.statusCode == 400 || res.statusCode == 401) {
+        return fetchNotifications();
+      } else if (res.statusCode == 200) {
         final body = jsonDecode(res.body);
         final List<dynamic> list = body['notifications'] ?? [];
         return list.map((e) => NotificationModel.fromJson(e)).toList();
@@ -54,9 +56,11 @@ class NotificationRemoteService {
       "${ApiConfigs.deleteANotification}$id?userId=$userId",
     );
 
-    final res = await http.delete(url);
+    final res = await http.delete(url, headers: ApiConfigs.protectedHeader());
 
-    if (res.statusCode == 200) {
+    if (res.statusCode == 400 || res.statusCode == 401) {
+      return await deleteNotification(id, userId);
+    } else if (res.statusCode == 200) {
       final data = jsonDecode(res.body);
       return data['success'] == true;
     } else {

@@ -1,13 +1,17 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streamsync_lite/core/di/dependencyinjection.dart';
 import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/features/authentication/services/localdatabase.dart';
+import 'package:streamsync_lite/features/authentication/view/signInscreen.dart';
+import 'package:streamsync_lite/main.dart';
 
 class ApiConfigs {
-  static const liveurl = "";
+  static const liveurl = "http://3.111.34.82";
+
 
   static const testurl = "http://10.151.63.246:3000";
 
@@ -40,7 +44,7 @@ class ApiConfigs {
 static Map<String, String> protectedHeader() {
   return {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer $apitoken',
+    'Authorization': 'Bearer $global_apitoken',
   };
 }
 
@@ -48,7 +52,7 @@ static Map<String, String> protectedHeader() {
 
 Future<String?> refreshToken() async {
   final storage = getIt<Localdatabase>();
-  final refreshToken = storage.getRefreshToken();
+  final refreshToken =await storage.getRefreshToken();
   print(refreshToken);
   if (refreshToken == null) return null;
 
@@ -61,12 +65,18 @@ Future<String?> refreshToken() async {
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
     final newAccessToken = data['token'];
-    apitoken = newAccessToken;
+    global_apitoken = newAccessToken;
 
-    storage.newAccesToken(newAccessToken);
+    storage.newAccessToken(newAccessToken);
     return newAccessToken;
   } else {
     print("Refresh token failed: ${response.body}");
+    navigatorKey.currentState?.pushAndRemoveUntil(
+  MaterialPageRoute(builder: (_) => SignInScreen()),
+  (route) => false,
+);
     return null;
   }
 }
+
+

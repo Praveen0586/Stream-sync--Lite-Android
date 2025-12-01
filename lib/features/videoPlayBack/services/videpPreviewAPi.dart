@@ -21,12 +21,17 @@ class Videppreviewapi {
         "progress": progress,
       }),
     );
-    if (response.statusCode == 400 || response.statusCode == 401) {
-      return updateProgress(
-        progress: progress,
-        userId: userId,
-        videoId: videoId,
-      );
+    if (response.statusCode == 401 || response.statusCode == 400) {
+      final newToken = await refreshToken();
+      if (newToken != null) {
+        return await updateProgress(
+          progress: progress,
+          userId: userId,
+          videoId: videoId,
+        );
+      } else {
+        throw Exception('Failed to fetch favorite videos');
+      }
     } else if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception("Failed to update progress");
     }
@@ -39,8 +44,13 @@ class Videppreviewapi {
         _url,
         headers: ApiConfigs.protectedHeader(),
       );
-      if (response.statusCode == 400 || response.statusCode == 401) {
-        return getVideoByID(videoID);
+      if (response.statusCode == 401 || response.statusCode == 400) {
+        final newToken = await refreshToken();
+        if (newToken != null) {
+          return await getVideoByID(videoID);
+        } else {
+          throw Exception('Failed to fetch favorite videos');
+        }
       } else if (response.statusCode == 200 || response.statusCode == 201) {
         print("I gt the video");
         final data = json.decode(response.body);
@@ -62,10 +72,14 @@ class Videppreviewapi {
         headers: ApiConfigs.protectedHeader(),
         body: jsonEncode({"videoID": videoId, "userID": userId}),
       );
-if (response.statusCode == 400 || response.statusCode == 401) {
-        return getProgress(videoId,userId);
-      } else
-      if (response.statusCode != 200)
+      if (response.statusCode == 401 || response.statusCode == 400) {
+        final newToken = await refreshToken();
+        if (newToken != null) {
+          return await getProgress(videoId, userId);
+        } else {
+          throw Exception('Failed to fetch favorite videos');
+        }
+      } else if (response.statusCode != 200)
         throw Exception("Failed to load progress");
 
       final data = jsonDecode(response.body);

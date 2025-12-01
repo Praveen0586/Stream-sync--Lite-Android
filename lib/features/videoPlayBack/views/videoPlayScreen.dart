@@ -95,10 +95,7 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
             appBar: AppBar(
               title: const Text("Video Player"),
               actions: [
-                IconButton(
-                  icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
-                  onPressed: () => setState(() => isLiked = !isLiked),
-                ),
+              
                 IconButton(
                   icon: const Icon(Icons.share),
                   onPressed: () =>
@@ -161,12 +158,7 @@ class _CourseVideoScreenState extends State<CourseVideoScreen> {
               ],
             ),
 
-            floatingActionButton: FloatingActionButton(
-              child: const Icon(Icons.comment),
-              onPressed: () {
-                // open comment page
-              },
-            ),
+          
           );
         },
       ),

@@ -22,7 +22,7 @@ class ProfileAPi {
         "metadata": {
           "type": "video",
           "action": "open_video",
-          "videoId": videoId,
+          "video_id": videoId,
         },
       }),
     );

@@ -36,8 +36,8 @@ class ApiServices {
       print("status code 1 ");
       Map<String, dynamic> data = json.decode(response.body);
       print(data);
-      refreshapitocken = data['RefreshToken'];
-      apitoken = data['token'];
+      global_refreshapitocken = data['RefreshToken'];
+      global_apitoken = data['token'];
 
       print("data returened ");
       return data;

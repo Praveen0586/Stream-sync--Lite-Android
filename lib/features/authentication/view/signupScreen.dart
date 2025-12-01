@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:streamsync_lite/features/authentication/view/signInscreen.dart';
 import 'package:streamsync_lite/features/authentication/viewmodel/bloc/authentiction_bloc.dart';
-import 'package:streamsync_lite/features/authentication/viewmodel/validators.dart';
+import 'package:streamsync_lite/features/authentication/services/validators.dart';
 import 'package:streamsync_lite/features/home/view/homescreen.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -49,7 +49,11 @@ class SignUpScreen extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.book_outlined, size: 48, color: Colors.blue),
+                      Icon(
+                        Icons.book_outlined,
+                        size: 48,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                       SizedBox(height: 16),
                       Text(
                         "Create Your Account",
@@ -73,13 +77,16 @@ class SignUpScreen extends StatelessWidget {
                         controller: _nameController,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.grey.shade100,
+                          fillColor: Theme.of(context).cardColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide.none,
                           ),
                           hintText: 'Enter User Name',
-                          prefixIcon: Icon(Icons.person_outline),
+                          prefixIcon: Icon(
+                            Icons.person_outline,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
                         ),
                         validator: validateFullName,
                       ),
@@ -98,9 +105,12 @@ class SignUpScreen extends StatelessWidget {
                         controller: _emailController,
                         decoration: InputDecoration(
                           hintText: 'Enter your Email Address',
-                          prefixIcon: Icon(Icons.email_outlined),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
                           filled: true,
-                          fillColor: Colors.grey.shade100,
+                          fillColor: Theme.of(context).cardColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide.none,
@@ -123,9 +133,12 @@ class SignUpScreen extends StatelessWidget {
                         controller: _passwordController,
                         decoration: InputDecoration(
                           hintText: 'Enter Your Password',
-                          prefixIcon: Icon(Icons.lock_outline),
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
                           filled: true,
-                          fillColor: Colors.grey.shade100,
+                          fillColor: Theme.of(context).cardColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide.none,
@@ -142,9 +155,10 @@ class SignUpScreen extends StatelessWidget {
                             double.infinity,
                             48,
                           ), // Full width, height 48px
-                          backgroundColor: Color(
-                            0xFF1668F2,
-                          ), // Solid blue color
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
+
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                               8,
@@ -168,7 +182,9 @@ class SignUpScreen extends StatelessWidget {
                         },
                         child: Text(
                           'Sign Up',
-                          style: TextStyle(color: Colors.white), // White text
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ), // White text
                         ),
                       ),
 
@@ -182,7 +198,9 @@ class SignUpScreen extends StatelessWidget {
                                 child: Text(
                                   "Log in",
                                   style: TextStyle(
-                                    color: Color(0xFF1668F2),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

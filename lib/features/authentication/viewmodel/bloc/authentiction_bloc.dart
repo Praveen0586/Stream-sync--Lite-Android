@@ -21,17 +21,20 @@ class AuthentictionBloc extends Bloc<AuthentictionEvent, AuthentictionState> {
           event.password,
         );
         emit(AuthenticationSucces());
-      } catch (e) {print("bloc login error");
+      } catch (e) {
+        print("bloc login error");
         emit(AuthenticationFailure(error: e.toString()));
       }
     });
 
     on<LoginEvent>((event, emit) async {
       emit(AuthenticationLoading());
-      try {print("Login Bloc called ");
+      try {
+        print("Login Bloc called ");
 
         await authrepositry.LoginUser(event.email, event.password);
-print("Login Bloc called ");
+
+        print("Login Bloc called ");
         emit(AuthenticationSucces());
       } catch (e) {
         emit(AuthenticationFailure(error: e.toString()));

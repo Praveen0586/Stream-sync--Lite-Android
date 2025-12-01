@@ -32,20 +32,34 @@ class SplashCubit extends Cubit<SplashState> {
       emit(SplashLoading(0.7));
       // await Future.delayed(const Duration(milliseconds: 1000));
       emit(SplashLoading(0.8));
+      print("STEP 1: Checking if user is logged in…");
+
       if (await splashrepo.isUserLoggedIn()) {
+        print("STEP 2: User is logged in. Emitting UserAlreadyLogined state…");
         emit(UserAlreadyLogined());
-        apitoken = await Localdatabase(
+
+        print("STEP 3: Fetching API token from Localdatabase…");
+        global_apitoken = await Localdatabase(
           getIt<SharedPreferences>(),
         ).getAPItoken();
-        refreshapitocken = await Localdatabase(
+        print("STEP 4: API Token fetched: $global_apitoken");
+
+        print("STEP 5: Fetching REFRESH token from Localdatabase…");
+        global_refreshapitocken = await Localdatabase(
           getIt<SharedPreferences>(),
         ).getRefreshToken();
-        //FCM Tocken
-        final token = await NotificationService.getToken();
-        print("FCM Token: $token");
+        print("STEP 6: REFRESH Token fetched: $global_refreshapitocken");
 
+        print("STEP 7: Fetching FCM token…");
+        final token = await NotificationService.getToken();
+        print("STEP 8: FCM Token fetched: $token");
+
+        print("STEP 9: Sending FCM token to backend…");
         await sendTokenToBackend(currentuser!.id, token);
+        print("STEP 10: Token sent to backend successfully.");
       } else {
+        print("STEP 0: User not logged in.");
+
         emit(SplashLoading(0.9));
 
         emit(SplashLoading(1.0));

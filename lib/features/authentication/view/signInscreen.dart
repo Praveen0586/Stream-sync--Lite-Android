@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:streamsync_lite/features/authentication/services/validators.dart';
 import 'package:streamsync_lite/features/authentication/view/signupScreen.dart';
 import 'package:streamsync_lite/features/authentication/viewmodel/bloc/authentiction_bloc.dart';
 import 'package:streamsync_lite/features/home/view/homescreen.dart';
@@ -7,12 +8,12 @@ import 'package:streamsync_lite/features/home/view/homescreen.dart';
 class SignInScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   var _emailController = TextEditingController();
-    var _passwordController = TextEditingController();
-   
+  var _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-   _emailController.text = "praveen@gmail.com";
-    _passwordController.text = "prveen123";
+    _emailController.text = "";
+    _passwordController.text = "";
     return BlocConsumer<AuthentictionBloc, AuthentictionState>(
       listener: (context, state) {
         if (state is AuthenticationFailure) {
@@ -43,13 +44,15 @@ class SignInScreen extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: Colors.blue.shade50,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Icon(
                           Icons.layers,
                           size: 48,
-                          color: Color(0xFF1668F2),
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                       SizedBox(height: 24),
@@ -64,13 +67,15 @@ class SignInScreen extends StatelessWidget {
                       Text(
                         "Sign in to continue your learning journey.",
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey.shade600),
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
                       ),
                       SizedBox(height: 32),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Email / Username",
+                          "Email",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -80,11 +85,12 @@ class SignInScreen extends StatelessWidget {
                       SizedBox(height: 4),
                       TextFormField(
                         controller: _emailController,
+                        validator: validateEmail,
                         decoration: InputDecoration(
-                          hintText: "Enter your email or username",
+                          hintText: "Enter your email",
                           prefixIcon: Icon(Icons.person_outline),
                           filled: true,
-                          fillColor: Colors.grey.shade100,
+                          fillColor: Theme.of(context).cardColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide.none,
@@ -104,6 +110,7 @@ class SignInScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       TextFormField(
+                        validator: validatePassword,
                         controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
@@ -111,31 +118,33 @@ class SignInScreen extends StatelessWidget {
                           prefixIcon: Icon(Icons.lock_outline),
                           suffixIcon: Icon(Icons.visibility_off),
                           filled: true,
-                          fillColor: Colors.grey.shade100,
+                          fillColor: Theme.of(context).cardColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide.none,
                           ),
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Forgot Password?",
-                            style: TextStyle(color: Color(0xFF1668F2)),
-                          ),
-                        ),
-                      ),
+                      // SizedBox(height: 8),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: TextButton(
+                      //     onPressed: () {},
+                      //     child: Text(
+                      //       "Forgot Password?",
+                      //       style: TextStyle(color: Color(0xFF1668F2)),
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(height: 14),
                       SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF1668F2),
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -154,7 +163,7 @@ class SignInScreen extends StatelessWidget {
                           child: Text(
                             "Sign In",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onPrimary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -178,7 +187,9 @@ class SignInScreen extends StatelessWidget {
                                 child: Text(
                                   "Sign Up",
                                   style: TextStyle(
-                                    color: Color(0xFF1668F2),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

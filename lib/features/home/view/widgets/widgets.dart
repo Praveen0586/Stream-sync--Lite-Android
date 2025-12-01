@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/core/services/cacheimages.dart';
 import 'package:streamsync_lite/features/favorites/viewModel/bloc/favorites_bloc.dart';
+import 'package:streamsync_lite/features/home/view/homescreen.dart';
 
 class VideoCard extends StatelessWidget {
   final String title;
@@ -83,7 +84,7 @@ class VideoCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        postedAgo,
+                        formatTimeAgo(DateTime.parse(postedAgo)),
                         style: TextStyle(color: Colors.grey[500], fontSize: 12),
                       ),
                       InkWell(
@@ -129,11 +130,7 @@ void showVideoActions(BuildContext context, String videoID) {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              leading: Icon(Icons.info_outline),
-              title: Text("View Details"),
-              onTap: () {},
-            ),
+          
             ListTile(
               leading: Icon(Icons.share),
               title: Text("Share Video"),

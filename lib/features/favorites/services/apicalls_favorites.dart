@@ -11,42 +11,40 @@ class FavoritesRemoteService {
     print("addingfav");
     final res = await http.post(
       Uri.parse(ApiConfigs.addfavorites),
-      headers: {"Content-Type": "application/json"},
+      headers: ApiConfigs.protectedHeader(),
       body: jsonEncode({"user_id": userId, "video_id": videoId}),
     );
     print("statuscode ${res.statusCode}");
-  if (res.statusCode == 401 || res.statusCode == 400) {
-  final refresh = await refreshToken();
-  if (refresh != null) {
-    return await removeFavorite(userId, videoId);
-  }
-  throw Exception("Unauthorized");
-}
+    if (res.statusCode == 401 || res.statusCode == 400) {
+      final refresh = await refreshToken();
+      if (refresh != null) {
+        return await removeFavorite(userId, videoId);
+      }
+      throw Exception("Unauthorized");
+    }
 
-if (res.statusCode != 200) {
-  throw Exception("Failed to remove favorite");
-}
-
+    if (res.statusCode != 200) {
+      throw Exception("Failed to remove favorite");
+    }
   }
 
   Future<void> removeFavorite(int userId, String videoId) async {
     final res = await http.delete(
       Uri.parse(ApiConfigs.removeFavorites),
-      headers: {"Content-Type": "application/json"},
+      headers: ApiConfigs.protectedHeader(),
       body: jsonEncode({"user_id": userId, "video_id": videoId}),
     );
-   if (res.statusCode == 401 || res.statusCode == 400) {
-  final refresh = await refreshToken();
-  if (refresh != null) {
-    return await addFavorite(userId, videoId); // retry
-  }
-  throw Exception("Unauthorized");
-}
+    if (res.statusCode == 401 || res.statusCode == 400) {
+      final refresh = await refreshToken();
+      if (refresh != null) {
+        return await addFavorite(userId, videoId); // retry
+      }
+      throw Exception("Unauthorized");
+    }
 
-if (res.statusCode != 200) {
-  throw Exception("Failed to add favorite");
-}
-
+    if (res.statusCode != 200) {
+      throw Exception("Failed to add favorite");
+    }
   }
 
   Future<List<FavVideoModel>> getFavoriteVideos(List<String> videoIds) async {
@@ -64,7 +62,7 @@ if (res.statusCode != 200) {
     } else if (response.statusCode == 401 || response.statusCode == 400) {
       final newToken = await refreshToken();
       if (newToken != null) {
-        return await  getFavoriteVideos(videoIds);
+        return await getFavoriteVideos(videoIds);
       } else {
         throw Exception('Failed to fetch favorite videos');
       }
@@ -81,14 +79,13 @@ if (res.statusCode != 200) {
     print(ApiConfigs.protectedHeader());
     print(resp.statusCode);
 
-if (resp.statusCode == 401 || resp.statusCode == 400) {
-  final refresh = await refreshToken();
-  if (refresh != null) {
-    return await fetchFavoriteIds(); // retry
-  }
-  throw Exception("Unauthorized");
-}
-else if (resp.statusCode != 200) {
+    if (resp.statusCode == 401 || resp.statusCode == 400) {
+      final refresh = await refreshToken();
+      if (refresh != null) {
+        return await fetchFavoriteIds(); // retry
+      }
+      throw Exception("Unauthorized");
+    } else if (resp.statusCode != 200) {
       throw Exception("Failed to fetch favorites: ${resp.statusCode}");
     }
 

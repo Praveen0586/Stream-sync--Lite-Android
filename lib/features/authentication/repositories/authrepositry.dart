@@ -1,3 +1,4 @@
+import 'package:streamsync_lite/core/fcm/notificationservice.dart';
 import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/features/authentication/model/userModel.dart';
 import 'package:streamsync_lite/features/authentication/services/api_services.dart';
@@ -16,7 +17,7 @@ class Authrepositry {
     );
   }
 
-  Future LoginUser(String email, String password) async {
+  Future<void> LoginUser(String email, String password) async {
     print("Login repo called ");
     final data = await apiservices.LoginUser(email, password);
     final UserModel user = UserModel(
@@ -26,8 +27,14 @@ class Authrepositry {
       id: data["user"]['id'],
     );
     currentuser = user;
+    final fcm_token = await NotificationService.getToken();
+
+    await sendTokenToBackend(currentuser!.id, fcm_token);
     await localdatabase.storeUser(user);
-    localdatabase.saveTokens(data['token'], data['refreshToken']);
+    print("✅Api tocken  ${data['token']}");
+    print("✅RefreshTocken tocken  ${data['RefreshToken']}");
+
+    await localdatabase.saveTokens(data['token'], data['RefreshToken']);
     print("Both Tockens were save in securestorage ");
   }
 }

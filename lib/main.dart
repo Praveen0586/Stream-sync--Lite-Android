@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:streamsync_lite/core/connectivity/connectivityService.dart';
 import 'package:streamsync_lite/core/connectivity/offlinebanner.dart';
 import 'package:streamsync_lite/core/di/dependencyinjection.dart';
-import 'package:streamsync_lite/core/fcm/firebasemessaging.dart';
 import 'package:streamsync_lite/core/fcm/notificationservice.dart';
+import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/core/utils/themeprovider.dart';
 import 'package:streamsync_lite/features/authentication/repositories/authrepositry.dart';
 import 'package:streamsync_lite/features/authentication/viewmodel/bloc/authentiction_bloc.dart';
@@ -24,15 +24,17 @@ import 'package:streamsync_lite/features/videoPlayBack/viewMdel/bloc/video_play_
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  await NotificationService.initialize();
+
 
   await configureDependencies();
   ConnectivityService().initialize();
+  await NotificationService.initialize();
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
@@ -70,7 +72,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'StreamSync Lite',
-        theme: ThemeData(
+      theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
@@ -84,8 +86,9 @@ class MyApp extends StatelessWidget {
           bodyLarge: TextStyle(color: Colors.black),
           bodyMedium: TextStyle(color: Colors.black87),
         ),
-        floatingActionButtonTheme:
-            const FloatingActionButtonThemeData(backgroundColor: Colors.blue),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.blue,
+        ),
       ),
 
       // DARK THEME
@@ -103,8 +106,9 @@ class MyApp extends StatelessWidget {
           bodyLarge: TextStyle(color: Colors.white),
           bodyMedium: TextStyle(color: Colors.white70),
         ),
-        floatingActionButtonTheme:
-            const FloatingActionButtonThemeData(backgroundColor: Colors.blueAccent),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.blueAccent,
+        ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Color(0xFF1F1F1F),
           selectedItemColor: Colors.blueAccent,

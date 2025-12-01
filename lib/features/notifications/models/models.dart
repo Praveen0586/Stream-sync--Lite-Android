@@ -4,7 +4,7 @@ class NotificationModel {
   final String description;
   final String timeAgo;
   final String iconType;
-  final bool isRead;
+  late final bool isRead;
   final String? videoId;
 
   NotificationModel({

@@ -48,7 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       CupertinoPageRoute(builder: (_) => FavoritesScreen()),
-                    );
+                    ).then((onValue) {
+                      context.read<HomeBloc>().add(startLoadEvent());
+                    });
                   },
                   child: Icon(Icons.favorite_outline),
                 ),
@@ -62,7 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           CupertinoPageRoute(
                             builder: (_) => NotificationsScreen(),
                           ),
-                        );
+                        ).then((onValue) {
+                      context.read<HomeBloc>().add(startLoadEvent());
+                    });
                       },
                     ),
                     if (notificationCount > 0)
@@ -101,7 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       CupertinoPageRoute(builder: (_) => AdminFCMPage()),
-                    );
+                    ).then((onValue) {
+                      context.read<HomeBloc>().add(startLoadEvent());
+                    });
                   },
                 ),
               ],
@@ -132,7 +138,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           builder: (_) =>
                               CourseVideoScreen(videoID: video.videoId),
                         ),
-                      );
+                      ).then((onValue) {
+                      context.read<HomeBloc>().add(startLoadEvent());
+                    });
                       // Navigate to player
                     },
                     onMoreTapped: () {

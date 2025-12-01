@@ -21,9 +21,15 @@ class NotificationRemoteService {
       );
 
       final res = await http.get(uri, headers: ApiConfigs.protectedHeader());
-      if (res.statusCode == 400 || res.statusCode == 401) {
-        return fetchNotifications();
-      } else if (res.statusCode == 200) {
+      if (res.statusCode == 401 || res.statusCode == 400) {
+        final newToken = await refreshToken();
+        if (newToken != null) {
+          return await fetchNotifications();
+        } else {
+          throw Exception('Failed to fetch favorite videos');
+        }
+      }
+      if (res.statusCode == 200) {
         final body = jsonDecode(res.body);
         final List<dynamic> list = body['notifications'] ?? [];
         return list.map((e) => NotificationModel.fromJson(e)).toList();
@@ -39,13 +45,20 @@ class NotificationRemoteService {
     final uri = Uri.parse(ApiConfigs.markAsRead);
     final res = await http.post(
       uri,
-      headers: {"Content-Type": "application/json"},
+      headers: ApiConfigs.protectedHeader(),
       body: jsonEncode({
         "notificationIds": [id],
         "userId": currentuser!.id,
       }),
     );
-
+    if (res.statusCode == 401 || res.statusCode == 400) {
+      final newToken = await refreshToken();
+      if (newToken != null) {
+        return await markAsRead(id);
+      } else {
+        throw Exception('Failed to fetch favorite videos');
+      }
+    }
     if (res.statusCode != 200) {
       throw Exception("Failed to mark notification as read");
     }
@@ -58,8 +71,13 @@ class NotificationRemoteService {
 
     final res = await http.delete(url, headers: ApiConfigs.protectedHeader());
 
-    if (res.statusCode == 400 || res.statusCode == 401) {
-      return await deleteNotification(id, userId);
+    if (res.statusCode == 401 || res.statusCode == 400) {
+      final newToken = await refreshToken();
+      if (newToken != null) {
+        return await deleteNotification(id, userId);
+      } else {
+        throw Exception('Failed to fetch favorite videos');
+      }
     } else if (res.statusCode == 200) {
       final data = jsonDecode(res.body);
       return data['success'] == true;
@@ -73,16 +91,26 @@ class NotificationRemoteService {
 
     final res = await http.post(
       uri,
-      headers: {"Content-Type": "application/json"},
+      headers: ApiConfigs.protectedHeader(),
       body: jsonEncode({
         "userId": currentuser!.id,
         "notificationIds": ids, // 🔥 Send entire list
       }),
     );
 
-    print("MARK MANY RESPONSE: ${res.body}");
+    if (res.statusCode == 401 || res.statusCode == 400) {
+      final newToken = await refreshToken();
+      if (newToken != null) {
+        return await markAllAsRead(ids);
+      } else {
+        throw Exception('Failed to fetch favorite videos');
+      }
+    }
 
-    if (res.statusCode != 200) {
+    print("MARK MANY RESPONSE: ${res.body}");
+    if (res.statusCode != 400 || res.statusCode != 401) {
+      return await markAllAsRead(ids);
+    } else if (res.statusCode != 200) {
       throw Exception("Failed to mark many as read");
     }
   }

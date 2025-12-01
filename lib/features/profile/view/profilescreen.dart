@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streamsync_lite/core/di/dependencyinjection.dart';
 import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/core/utils/themeprovider.dart';
+import 'package:streamsync_lite/features/authentication/services/localdatabase.dart';
 import 'package:streamsync_lite/features/authentication/view/signInscreen.dart';
 import 'package:streamsync_lite/features/profile/services/apiProfileServices.dart';
 
@@ -192,24 +193,24 @@ class _AdminFCMPageState extends State<AdminFCMPage> {
           ),
           const SizedBox(height: 16),
 
-          SizedBox(
-            height: 50,
-            child: ElevatedButton(
-              onPressed: loadingSelf ? null : sendSelfTest,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: loadingSelf
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text(
-                      "Self Test FCM",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-            ),
-          ),
+          // SizedBox(
+          //   height: 50,
+          //   child: ElevatedButton(
+          //     onPressed: loadingSelf ? null : sendSelfTest,
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: Colors.green,
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(12),
+          //       ),
+          //     ),
+          //     child: loadingSelf
+          //         ? const CircularProgressIndicator(color: Colors.white)
+          //         : const Text(
+          //             "Self Test FCM",
+          //             style: TextStyle(color: Colors.white, fontSize: 16),
+          //           ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -246,10 +247,11 @@ class _AdminFCMPageState extends State<AdminFCMPage> {
 
   Future<void> _logout(BuildContext context) async {
     // Clear in-memory user object
-    currentuser= null;
+    currentuser = null;
 
     final sharedPreferences = getIt<SharedPreferences>();
-    await sharedPreferences.remove("user"); 
+    await sharedPreferences.remove("user");
+    await Localdatabase(sharedPreferences).cleanTokens();
 
     Navigator.of(context).pushAndRemoveUntil(
       CupertinoPageRoute(builder: (context) => SignInScreen()),

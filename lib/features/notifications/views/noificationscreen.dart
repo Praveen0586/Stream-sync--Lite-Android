@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:streamsync_lite/core/globals/globals.dart';
 import 'package:streamsync_lite/features/notifications/viewModel/bloc/notifications_bloc.dart';
 import 'package:streamsync_lite/features/videoPlayBack/views/videoPlayScreen.dart';
 
@@ -42,7 +44,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         actions: [
           TextButton(
             onPressed: () {
+
               context.read<NotificationsBloc>().add(MarkAllReadEvent());
+              setState(() {
+                
+              });
             },
             child: const Text("Mark all as read"),
           ),
@@ -51,14 +57,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
       body: BlocListener<NotificationsBloc, NotificationsState>(
         listener: (context, state) {
-       
           if (state is NotificationDeletedState) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text("Notification deleted")));
           }
 
-       
           if (state is NotificationDeleteErrorState) {
             ScaffoldMessenger.of(
               context,
@@ -81,7 +85,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 itemCount: state.notifications.length,
                 separatorBuilder: (_, __) => Divider(),
                 itemBuilder: (context, index) {
-                  final n = state.notifications[index];
+                  var n = state.notifications[index];
 
                   return Dismissible(
                     key: ValueKey("notif_${n.id}_${index}"),
@@ -94,13 +98,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       child: const Icon(Icons.delete, color: Colors.white),
                     ),
 
-                    
                     onDismissed: (_) {
-                   
                       final bloc = context.read<NotificationsBloc>();
-                    state.notifications.removeAt(index);
+                      state.notifications.removeAt(index);
 
-                   
                       bloc.add(
                         DeleteNotificationEvent(
                           notificationId: int.parse(n.id),
@@ -116,15 +117,21 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           ? null
                           : Icon(Icons.circle, color: Colors.blue, size: 10),
 
-                   
                       onTap: () {
-                        if (!n.isRead) {
-                          context.read<NotificationsBloc>().add(
-                            MarkReadEvent(n.id),
-                          );
-                        }
+                        print(n.isRead);
+                        // if (!n.isRead) {
+                        //   setState(() {
+                        //     n.isRead = true;
+                        //   });
+                        // }
 
-                        if (n.videoId != null) {
+                        print(global_apitoken);
+                        setState(() {});
+                        context.read<NotificationsBloc>().add(
+                          MarkReadEvent(n.id),
+                        );
+
+                        if (n.videoId != null && n.videoId!.isNotEmpty) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

@@ -18,11 +18,14 @@ class VideoApiServices {
       // if (result == ConnectivityResult.none) {
       //   return {"success": false, "message": "No internet"};
       // }
-
-      if (response.statusCode == 400 || response.statusCode == 401) {
-        return getVidesByChannelID(channelID);
-      } else
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 401 || response.statusCode == 400) {
+        final newToken = await refreshToken();
+        if (newToken != null) {
+          return await getVidesByChannelID(channelID);
+        } else {
+          throw Exception('Failed to fetch favorite videos');
+        }
+      } else if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
         return data;
       }
@@ -41,9 +44,13 @@ class VideoApiServices {
         uri,
         headers: ApiConfigs.protectedHeader(),
       );
-
-      if (response.statusCode == 400 || response.statusCode == 401) {
-        return getNotificationCount();
+      if (response.statusCode == 401 || response.statusCode == 400) {
+        final newToken = await refreshToken();
+        if (newToken != null) {
+          return await getNotificationCount();
+        } else {
+          throw Exception('Failed to fetch favorite videos');
+        }
       } else if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['success'] == true) {

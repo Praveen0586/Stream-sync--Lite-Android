@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -247,11 +248,16 @@ class _AdminFCMPageState extends State<AdminFCMPage> {
 
   Future<void> _logout(BuildContext context) async {
     // Clear in-memory user object
-    currentuser = null;
 
     final sharedPreferences = getIt<SharedPreferences>();
     await sharedPreferences.remove("user");
     await Localdatabase(sharedPreferences).cleanTokens();
+    final _instance = await FirebaseMessaging.instance;
+    final token = await _instance.getToken();
+
+    _instance.deleteToken();
+    deleteTokenFromBackend(currentuser!.id, token!);
+    currentuser = null;
 
     Navigator.of(context).pushAndRemoveUntil(
       CupertinoPageRoute(builder: (context) => SignInScreen()),

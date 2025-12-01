@@ -53,8 +53,42 @@ class ProfileAPi {
     );
     if (response.statusCode == 400 || response.statusCode == 401) {
       return sendSelfTestFCM(body: body, title: title, userId: userId);
-    } else if (response.statusCode == 200||response.statusCode == 201)
+    } else if (response.statusCode == 200 || response.statusCode == 201)
       return jsonDecode(response.body);
-      else throw ("Self push Failed");
+    else
+      throw ("Self push Failed");
+  }
+}
+
+Future<void> deleteTokenFromBackend(int userId, String token) async {
+  // Use your API config
+  final url = Uri.parse("${ApiConfigs.sendFCMtoken}/users/$userId/fcmToken");
+
+  print("🗑️ Deleting token from: $url");
+
+  try {
+    final response = await http.delete(
+      url,
+      headers: ApiConfigs.protectedHeader(),
+      body: jsonEncode({"token": token}),
+    );
+
+    print("📡 Response status: ${response.statusCode}");
+    print("📄 Response body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      print("✅ Token deleted successfully from backend");
+    } else if (response.statusCode == 401 || response.statusCode == 400) {
+      // Try to refresh token and retry
+      final newAccessToken = await refreshToken();
+      if (newAccessToken != null && newAccessToken.isNotEmpty) {
+        await deleteTokenFromBackend(userId, token);
+      }
+      return;
+    } else {
+      print("⚠️ Failed to delete token: ${response.body}");
+    }
+  } catch (e) {
+    print("⚠️ Error deleting token: $e");
   }
 }
